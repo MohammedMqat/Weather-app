@@ -12,7 +12,7 @@ body {
   align-items: center;
   height: 100vh;
 }
-#weatherImage {
+#weather-image {
   width: 100vw;
   height: 100vh;
   object-fit: cover;

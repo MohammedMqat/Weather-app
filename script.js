@@ -1,7 +1,7 @@
 const weatherImage = document.getElementById("weather-image");
 const weatherContainer = document.getElementById("weather-container");
 const searchContainer = document.getElementById("search-container");
-const searchInput = document.getElementById("search-input");
+const searchForm = document.getElementById("search-form");
 const weatherInfo = document.getElementById("weather-info");
 const locationEle = document.getElementById("location");
 const cityName = document.getElementById("city-name");
@@ -19,8 +19,6 @@ const currentPath = "/current.json";
 function fetchXHR(url, path, query, callback) {
   const xhr = new XMLHttpRequest();
   xhr.open("GET", `${url}${path}?q=${query}&key=${apiKey}`, true);
-  //xhr.setRequestHeader("Authorization", `Bearer ${apiKey}`);
-
   xhr.onreadystatechange = () => {
     if (xhr.readyState === xhr.DONE && xhr.status === 200) {
       const data = JSON.parse(xhr.responseText);
@@ -30,5 +28,13 @@ function fetchXHR(url, path, query, callback) {
 
   xhr.send();
 }
+
+searchForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const query = formData.get("query");
+});
+
+const weatherapp = (weatherdata) => {};
 
 fetchXHR(baseUrl, currentPath, "Gaza, Palestine", (resp) => console.log(resp));
