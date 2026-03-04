@@ -12,7 +12,14 @@ body {
   align-items: center;
   height: 100vh;
 }
-
+#weatherImage {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
 .weather-container {
   text-align: center;
   background: rgba(255, 255, 255, 0.7);
