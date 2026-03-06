@@ -16,6 +16,7 @@ const dateEle = document.getElementById("date");
 const apiKey = "";
 const baseUrl = "http://api.weatherapi.com/v1";
 const currentPath = "/current.json";
+const searchPath = "/search.json";
 function fetchXHR(url, path, query, callback) {
   const xhr = new XMLHttpRequest();
   xhr.open("GET", `${url}${path}?q=${query}&key=${apiKey}`, true);
@@ -29,12 +30,68 @@ function fetchXHR(url, path, query, callback) {
   xhr.send();
 }
 
+const searchInput = document.getElementById("search-input");
+const autocompleteList = document.getElementById("autocomplete-list");
+
 searchForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(event.target);
   const query = formData.get("query");
+  autocompleteList.classList.add("hidden");
+  fetchXHR(baseUrl, currentPath, query, updateUI);
 });
 
-const weatherapp = (weatherdata) => {};
+function debounce(fn, delay) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
 
-fetchXHR(baseUrl, currentPath, "Gaza, Palestine", (resp) => console.log(resp));
+const renderSuggestions = (results) => {
+  autocompleteList.innerHTML = "";
+  if (!results || results.length === 0) {
+    autocompleteList.classList.add("hidden");
+    return;
+  }
+  results.forEach((place) => {
+    const li = document.createElement("li");
+    li.textContent = `${place.name}, ${place.region}, ${place.country}`;
+    li.addEventListener("mousedown", () => {
+      searchInput.value = place.name;
+      autocompleteList.classList.add("hidden");
+      fetchXHR(baseUrl, currentPath, place.name, updateUI);
+    });
+    autocompleteList.appendChild(li);
+  });
+  autocompleteList.classList.remove("hidden");
+};
+
+searchInput.addEventListener(
+  "input",
+  debounce(() => {
+    const query = searchInput.value.trim();
+    if (query.length < 3) {
+      autocompleteList.classList.add("hidden");
+      return;
+    }
+    fetchXHR(baseUrl, searchPath, query, renderSuggestions);
+  }, 300)
+);
+
+searchInput.addEventListener("blur", () => {
+  autocompleteList.classList.add("hidden");
+});
+
+const updateUI = (weatherData) => {
+  console.log(weatherData);
+  temperature.textContent = weatherData.current.temp_c;
+  timeEle.textContent = weatherData.current.last_updated;
+  locationEle.textContent = weatherData.location.name;
+  cityName.textContent = weatherData.location.name;
+  weatherIcon.src = weatherData.current.condition.icon;
+};
+
+fetchXHR(baseUrl, currentPath, "Gaza, Palestine", updateUI);
+(resp) => resp;

@@ -13,11 +13,14 @@
         <form id="search-form">
           <input
             name="query"
+            id="search-input"
             type="text"
             placeholder="Search"
             class="search-input"
+            autocomplete="off"
           />
         </form>
+        <ul id="autocomplete-list" class="autocomplete-list hidden"></ul>
       </div>
 
       <div class="weather-info" id="weather-info">
