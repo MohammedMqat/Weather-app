@@ -77,7 +77,7 @@ searchInput.addEventListener(
       return;
     }
     fetchXHR(baseUrl, searchPath, query, renderSuggestions);
-  }, 300)
+  }, 300),
 );
 
 searchInput.addEventListener("blur", () => {
